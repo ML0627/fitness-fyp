@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import AuthNavigator from './src/navigation/AuthNavigator';
+import AuthNavigator from './frontend/navigation/AuthNavigator';
 
 export default function App() {
   return (

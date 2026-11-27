@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import PrimaryButton from '../components/PrimaryButton';
+import PrimaryButton from './components/PrimaryButton';
 import { AuthStackParamList } from '../navigation/types';
 import { colors } from '../theme/colors';
 

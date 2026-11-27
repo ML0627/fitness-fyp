@@ -8,7 +8,7 @@ import {
   TextInputProps,
   View,
 } from 'react-native';
-import { colors } from '../theme/colors';
+import { colors } from '../../theme/colors';
 
 type AuthTextInputProps = TextInputProps & {
   label: string;

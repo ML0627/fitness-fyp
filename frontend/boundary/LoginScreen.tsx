@@ -11,43 +11,36 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import AuthTextInput from '../components/AuthTextInput';
-import PrimaryButton from '../components/PrimaryButton';
+import { LoginController, LoginErrors } from '../control/LoginController';
 import { AuthStackParamList } from '../navigation/types';
 import { colors } from '../theme/colors';
-import { SignUpErrors, validateSignUp } from '../utils/validation';
+import AuthTextInput from './components/AuthTextInput';
+import PrimaryButton from './components/PrimaryButton';
 
-type Props = NativeStackScreenProps<AuthStackParamList, 'SignUp'>;
+type Props = NativeStackScreenProps<AuthStackParamList, 'Login'>;
 
-export default function SignUpScreen({ navigation }: Props) {
-  const [name, setName] = useState('');
+const loginController = new LoginController();
+
+export default function LoginScreen({ navigation }: Props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [errors, setErrors] = useState<SignUpErrors>({});
+  const [errors, setErrors] = useState<LoginErrors>({});
   const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = async () => {
-    const nextErrors = validateSignUp(name, email, password, confirmPassword);
-    setErrors(nextErrors);
-
-    if (Object.keys(nextErrors).length > 0) {
-      return;
-    }
-
+  const handleSubmit = () => {
     setSubmitting(true);
     try {
-      // Placeholder for Supabase auth:
-      // await supabase.auth.signUp({
-      //   email,
-      //   password,
-      //   options: { data: { full_name: name.trim() } },
-      // })
-      console.log('Sign-up submit ready for Supabase', {
-        name: name.trim(),
-        email: email.trim(),
-      });
-      Alert.alert('Ready for Supabase', 'Sign-up validation passed. Wire this to supabase.auth.signUp.');
+      const result = loginController.login(email, password);
+      if (!result.ok) {
+        setErrors(result.errors);
+        return;
+      }
+
+      setErrors({});
+      Alert.alert(
+        'Ready for Supabase',
+        'Login validation passed. Wire this to supabase.auth.signInWithPassword.',
+      );
     } finally {
       setSubmitting(false);
     }
@@ -68,29 +61,11 @@ export default function SignUpScreen({ navigation }: Props) {
           </Pressable>
 
           <View style={styles.header}>
-            <Text style={styles.title}>Create account</Text>
-            <Text style={styles.subtitle}>
-              Set up your profile so we can personalize your fitness journey.
-            </Text>
+            <Text style={styles.title}>Log in</Text>
+            <Text style={styles.subtitle}>Welcome back. Continue where you left off.</Text>
           </View>
 
           <View style={styles.form}>
-            <AuthTextInput
-              label="Name"
-              value={name}
-              onChangeText={(value) => {
-                setName(value);
-                if (errors.name) {
-                  setErrors((current) => ({ ...current, name: undefined }));
-                }
-              }}
-              error={errors.name}
-              autoCapitalize="words"
-              autoComplete="name"
-              placeholder="Your name"
-              textContentType="name"
-            />
-
             <AuthTextInput
               label="Email"
               value={email}
@@ -120,39 +95,22 @@ export default function SignUpScreen({ navigation }: Props) {
               error={errors.password}
               isPassword
               autoCapitalize="none"
-              autoComplete="password-new"
-              placeholder="At least 8 characters"
-              textContentType="newPassword"
-            />
-
-            <AuthTextInput
-              label="Confirm Password"
-              value={confirmPassword}
-              onChangeText={(value) => {
-                setConfirmPassword(value);
-                if (errors.confirmPassword) {
-                  setErrors((current) => ({ ...current, confirmPassword: undefined }));
-                }
-              }}
-              error={errors.confirmPassword}
-              isPassword
-              autoCapitalize="none"
-              autoComplete="password-new"
-              placeholder="Re-enter your password"
-              textContentType="newPassword"
+              autoComplete="password"
+              placeholder="Enter your password"
+              textContentType="password"
             />
           </View>
 
           <PrimaryButton
-            label={submitting ? 'Creating account...' : 'Create Account'}
+            label={submitting ? 'Logging in...' : 'Log In'}
             onPress={handleSubmit}
             disabled={submitting}
             style={styles.submit}
           />
 
-          <Pressable onPress={() => navigation.navigate('Login')} style={styles.switchRow}>
+          <Pressable onPress={() => navigation.navigate('SignUp')} style={styles.switchRow}>
             <Text style={styles.switchText}>
-              Already have an account? <Text style={styles.switchLink}>Log In</Text>
+              New here? <Text style={styles.switchLink}>Create Account</Text>
             </Text>
           </Pressable>
         </ScrollView>
