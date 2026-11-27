@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text, ViewStyle } from 'react-native';
-import { colors } from '../theme/colors';
+import { colors } from '../../theme/colors';
 
 type PrimaryButtonProps = {
   label: string;
