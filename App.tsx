@@ -1,12 +1,15 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import RootTabs from './src/navigation/RootTabs';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import AuthNavigator from './src/navigation/AuthNavigator';
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <StatusBar style="auto" />
-      <RootTabs />
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <StatusBar style="auto" />
+        <AuthNavigator />
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
